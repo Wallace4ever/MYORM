@@ -119,9 +119,6 @@ public class JavaFileUtils {
     }*/
 
     public static void main(String[] args) {
-        Map<String,TableInfo> map=TableContext.tables;
-        for (TableInfo ti : map.values()) {
-            createJavaPOFile(ti,new MySqlTypeConverter());
-        }
+        Map<Class,TableInfo> map=TableContext.poClassTableMap;
     }
 }
