@@ -1,15 +1,17 @@
 package sorm.core;
 
+import po.Dept;
+import po.Emp;
 import sorm.bean.ColumnInfo;
 import sorm.bean.TableInfo;
 import sorm.utils.JDBCUtils;
 import sorm.utils.ReflectUtils;
+import sorm.utils.StringUtil;
 
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.lang.reflect.Method;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +20,21 @@ import java.util.List;
  * @author wallace
  */
 public class MySqlQuery implements Query{
-/*    public static void main(String[] args) {
+    public static void main(String[] args) {
+        /*测试update
         Dept dept=new Dept();
         dept.setId(1);
         dept.setAddress("大上海");
         dept.setDname("法务部");
-        new MySqlQuery().update(dept,new String[]{"address","dname"});
-    }*/
+        new MySqlQuery().update(dept,new String[]{"address","dname"});*/
+
+        /*测试query
+        List<Emp> list = new MySqlQuery().queryRows("select id,empname,age,deptId from emp where age>? and salary>?",
+                Emp.class, new Object[]{18, 5000});
+        for (Emp e : list) {
+            System.out.println(e.getEmpname());
+        }*/
+    }
     @Override
     public int executeDML(String sql, Object[] params) {
         Connection conn=DBManager.getConn();
@@ -113,7 +123,38 @@ public class MySqlQuery implements Query{
 
     @Override
     public List queryRows(String sql, Class cla, Object[] params) {
-        return null;
+        Connection conn=DBManager.getConn();
+        List list=null;
+        ResultSet rs=null;
+        PreparedStatement ps=null;
+        try {
+            ps=conn.prepareStatement(sql);
+            JDBCUtils.handleParams(ps,params);
+            System.out.println(ps);
+            rs=ps.executeQuery();
+
+            ResultSetMetaData metaData=rs.getMetaData();
+            //查询的结果集为多行
+            while (rs.next()) {
+                if (list == null) {
+                    list=new ArrayList();
+                }
+                //调用Javabean的无参构造器
+                Object rowObj=cla.newInstance();
+                //多列query如 select username,pwd,age from user where id>? and age >18
+                for (int i = 0; i<metaData.getColumnCount();i++) {
+                    String columnName=metaData.getColumnLabel(i+1);
+                    Object columnValue=rs.getObject(i+1);
+
+                    //调用rowObject的setUsername方法，将columnValue放进去
+                    ReflectUtils.invokeSet(rowObj,columnName,columnValue);
+                }
+                list.add(rowObj);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     @Override

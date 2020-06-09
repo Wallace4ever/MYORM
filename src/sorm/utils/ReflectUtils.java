@@ -18,11 +18,22 @@ public class ReflectUtils {
         Object obj=null;
         try {
             Class cla=object.getClass();
-            Method method=cla.getMethod("get"+ StringUtil.firstChar2UpperCase(fieldName),null);
+            Method method=cla.getDeclaredMethod("get"+ StringUtil.firstChar2UpperCase(fieldName),null);
             obj=method.invoke(object,null);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return obj;
+    }
+
+    public static void invokeSet(Object obj,String columnName,Object columnValue) {
+        Method m= null;
+        try {
+            m = obj.getClass().getDeclaredMethod("set"+ StringUtil.firstChar2UpperCase(columnName),columnValue.getClass());
+            m.invoke(obj,columnValue);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
     }
 }
