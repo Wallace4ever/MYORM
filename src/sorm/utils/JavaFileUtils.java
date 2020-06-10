@@ -112,13 +112,9 @@ public class JavaFileUtils {
         }
     }
 
-/*    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         ColumnInfo ci=new ColumnInfo("age","smallint",0);
         JavaFieldGetSet f=createFieldGetSetSRC(ci,new MySqlTypeConverter());
         System.out.println(f);
     }*/
-
-    public static void main(String[] args) {
-        Map<Class,TableInfo> map=TableContext.poClassTableMap;
-    }
 }

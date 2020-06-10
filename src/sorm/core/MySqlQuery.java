@@ -6,11 +6,9 @@ import sorm.bean.ColumnInfo;
 import sorm.bean.TableInfo;
 import sorm.utils.JDBCUtils;
 import sorm.utils.ReflectUtils;
-import sorm.utils.StringUtil;
 
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +32,13 @@ public class MySqlQuery implements Query{
         for (Emp e : list) {
             System.out.println(e.getEmpname());
         }*/
+
+       /*测试query单个值，使用Number便于在使用时转型
+        Object obj=new MySqlQuery().queryValue("select count(*) from emp where salary>?",new Object[]{5000});
+        Number obj2=new MySqlQuery().queryNumber("select count(*) from emp where salary>=?",new Object[]{5000});
+        System.out.println(obj2.doubleValue());*/
     }
+
     @Override
     public int executeDML(String sql, Object[] params) {
         Connection conn=DBManager.getConn();
@@ -48,7 +52,7 @@ public class MySqlQuery implements Query{
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return 0;
+        return count;
     }
 
     @Override
@@ -130,7 +134,7 @@ public class MySqlQuery implements Query{
         try {
             ps=conn.prepareStatement(sql);
             JDBCUtils.handleParams(ps,params);
-            System.out.println(ps);
+            //System.out.println(ps);
             rs=ps.executeQuery();
 
             ResultSetMetaData metaData=rs.getMetaData();
@@ -159,16 +163,32 @@ public class MySqlQuery implements Query{
 
     @Override
     public Object queryUniqueRow(String sql, Class cla, Object[] params) {
-        return null;
+        List list=queryRows(sql, cla, params);
+        return (list==null&&list.size()>0)?null:list.get(0);
     }
 
     @Override
     public Object queryValue(String sql, Object[] params) {
-        return null;
+        Connection conn=DBManager.getConn();
+        ResultSet rs=null;
+        PreparedStatement ps=null;
+        Object value=null;
+        try {
+            ps=conn.prepareStatement(sql);
+            JDBCUtils.handleParams(ps,params);
+            //System.out.println(ps);
+            rs=ps.executeQuery();
+            while (rs.next()) {
+                value=rs.getObject(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
     }
 
     @Override
     public Number queryNumber(String sql, Object[] params) {
-        return null;
+        return (Number) queryValue(sql, params);
     }
 }

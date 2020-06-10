@@ -34,6 +34,5 @@ public class ReflectUtils {
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-
     }
 }
