@@ -15,7 +15,12 @@ import java.util.List;
  * @author wallace
  */
 @SuppressWarnings("all")
-public abstract class Query {
+public abstract class Query implements Cloneable{
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
     /**
      * 采用模版方法模式将JDBC操作封装成模版，便于重用
      * @param sql sql语句
@@ -34,9 +39,7 @@ public abstract class Query {
             //System.out.println(ps);
             rs=ps.executeQuery();
             Object result=callback.doExecute(conn,ps,rs);
-            rs.close();
-            ps.close();
-            conn.close();
+            DBManager.close(rs,ps,conn);
             return result;
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,6 +62,7 @@ public abstract class Query {
             JDBCUtils.handleParams(ps,params);
             System.out.println(ps);
             count=ps.executeUpdate();
+            DBManager.close(ps,conn);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

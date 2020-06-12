@@ -33,11 +33,24 @@ public class Configuration {
      *扫描生成Java类的包，po指的是Persistence Object持久化对象
      */
     private String poPackage;
+    /**
+     * 项目使用的查询类的路径
+     */
+    private String queryClass;
+    /**
+     * 连接池中最小连接数
+     */
+    private int poolMinSize;
+    /**
+     * 连接池中最大连接数
+     */
+    private int poolMaxSize;
 
     public Configuration() {
     }
 
-    public Configuration(String driver, String url, String user, String pwd, String currentDB, String srcPath, String poPackage) {
+    public Configuration(String driver, String url, String user, String pwd, String currentDB, String srcPath,
+                         String poPackage, String queryClass, int poolMinSize, int poolMaxSize) {
         this.driver = driver;
         this.url = url;
         this.user = user;
@@ -45,6 +58,9 @@ public class Configuration {
         this.currentDB = currentDB;
         this.srcPath = srcPath;
         this.poPackage = poPackage;
+        this.queryClass = queryClass;
+        this.poolMinSize = poolMinSize;
+        this.poolMaxSize = poolMaxSize;
     }
 
     public String getDriver() {
@@ -101,5 +117,29 @@ public class Configuration {
 
     public void setPoPackage(String poPackage) {
         this.poPackage = poPackage;
+    }
+
+    public String getQueryClass() {
+        return queryClass;
+    }
+
+    public void setQueryClass(String queryClass) {
+        this.queryClass = queryClass;
+    }
+
+    public int getPoolMinSize() {
+        return poolMinSize;
+    }
+
+    public void setPoolMinSize(int poolMinSize) {
+        this.poolMinSize = poolMinSize;
+    }
+
+    public int getPoolMaxSize() {
+        return poolMaxSize;
+    }
+
+    public void setPoolMaxSize(int poolMaxSize) {
+        this.poolMaxSize = poolMaxSize;
     }
 }

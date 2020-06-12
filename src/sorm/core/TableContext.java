@@ -38,7 +38,7 @@ public class TableContext {
             ResultSet tableSet=metaData.getTables("orm","%","%",new String[]{"TABLE"});
             while (tableSet.next()) {
                 String tableName=(String) tableSet.getObject("TABLE_NAME");
-                System.out.println(tableName);
+                //System.out.println(tableName);
                 TableInfo tableInfo=new TableInfo(tableName, new HashMap<>(),new ArrayList<>());
                 tables.put(tableName,tableInfo);//表信息和表明关联在一起放到了类变量tables容器中
 
