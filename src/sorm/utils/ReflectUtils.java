@@ -12,6 +12,7 @@ public class ReflectUtils {
      * 调用object对象的属性fieldName对应的get方法
      * @param fieldName 属性名
      * @param object 对象
+     * @return 调用该get方法得到的对象
      */
     public static Object invokeGet(String fieldName, Object object) {
         //通过反射机制调用该对象该属性对应的get方法
@@ -27,10 +28,13 @@ public class ReflectUtils {
     }
 
     public static void invokeSet(Object obj,String columnName,Object columnValue) {
-        Method m= null;
         try {
-            m = obj.getClass().getDeclaredMethod("set"+ StringUtil.firstChar2UpperCase(columnName),columnValue.getClass());
-            m.invoke(obj,columnValue);
+            //如果数据库查到的Value为空，则不对该对象的该属性进行set操作，否则可能出现空指针异常
+            if (columnValue != null) {
+                Method m= null;
+                m = obj.getClass().getDeclaredMethod("set"+ StringUtil.firstChar2UpperCase(columnName),columnValue.getClass());
+                m.invoke(obj,columnValue);
+            }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

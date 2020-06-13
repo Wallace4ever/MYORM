@@ -1,18 +1,5 @@
 package sorm.core;
 
-import po.Dept;
-import po.Emp;
-import sorm.bean.ColumnInfo;
-import sorm.bean.TableInfo;
-import sorm.utils.JDBCUtils;
-import sorm.utils.ReflectUtils;
-
-
-import java.lang.reflect.Field;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 负责对MySQL数据库查询的核心类
  * @author wallace

@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class JavaFileUtils {
     /**
-     * 根据字段生成Java属性信息以及相应的get/set源码。如varchar username-> private String username;
+     * 根据字段生成Java属性信息以及相应的get/set源码。如从varchar username到private String username;
      * @param column 字段信息
      * @param converter 类型转化器
      * @return Java属性以及相应的get/set源码

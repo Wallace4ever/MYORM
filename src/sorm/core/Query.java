@@ -205,7 +205,21 @@ public abstract class Query implements Cloneable{
      */
     public Object queryUniqueRow(String sql, Class cla, Object[] params) {
         List list=queryRows(sql, cla, params);
-        return (list==null&&list.size()>0)?null:list.get(0);
+        return (list!=null&&list.size()>0)?list.get(0):null;
+    }
+
+    /**
+     * 根据主键值直接查找对应的对象
+     * @param cla 类
+     * @param id 主键
+     * @return 对应的对象
+     */
+    public Object queryById(Class cla, Object id) {
+        //select * from emp where id=?
+        TableInfo tableInfo=TableContext.poClassTableMap.get(cla);
+        ColumnInfo onlyPriKey=tableInfo.getPrimaryKey();
+        String sql="select * from "+tableInfo.getT_name()+" where "+onlyPriKey.getName()+"=?";
+        return queryUniqueRow(sql,cla,new Object[]{id});
     }
 
     /**
@@ -245,7 +259,7 @@ public abstract class Query implements Cloneable{
      * 分页查询，不同数据库具体不一样
      * @param pageNum 第几页数据
      * @param size 每页显示多少条记录
-     * @return
+     * @return 每页查询到的所有结果
      */
     public abstract Object queryPage(int pageNum,int size);
 }

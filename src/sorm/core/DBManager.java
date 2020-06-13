@@ -24,7 +24,7 @@ public class DBManager {
         Properties properties=new Properties();
         try {
             //properties.load(DBManager.class.getResourceAsStream("/sorm/db.properties"));
-            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("sorm/db.properties"));
+            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("db.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
